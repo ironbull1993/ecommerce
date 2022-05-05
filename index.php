@@ -79,7 +79,7 @@ button:hover {
 		                </ol>
 		                <div class="carousel-inner">
 		                  <div class="item active">
-		                    <img src="images/banner1.png" alt="First slide">
+		                    <img src="images/pkg.png" alt="First slide" >
 		                  </div>
 		                  <div class="item">
 		                    <img src="images/banner2.png" alt="Second slide">
@@ -143,7 +143,7 @@ button:hover {
 											  <input type="hidden" name="quantity" id="quantity" class="form-control input-lg" value="1">
 														
 											  <input type="hidden" name="id" value="<?php echo $row["id"]; ?>" /><div class="main">
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class=""> Add to Cart</button></div>
+											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="" style="border-radius: 25px;"> Add to Cart</button></div>
 											<?php
 											;}
                                               ?>

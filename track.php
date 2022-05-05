@@ -1,8 +1,35 @@
 <?php include 'includes/session.php'; ?>
-
 <?php include 'includes/header.php'; ?>
-<body class="hold-transition register-page">
-<div class="register-box">
+<style>
+  #example1_length{
+    display: none;
+  }
+  #example1_filter{
+    display: none;
+  }
+  #example1_info{
+    display: none;
+  }
+  #example1_paginate{
+    display: none;
+  }
+</style>
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="wrapper">
+
+	<?php include 'includes/navbar.php'; ?>
+	
+
+	 
+	  <div class="content-wrapper">
+	    <div class="container">
+
+	      <!-- Main content -->
+	      <section class="content">
+	        <div class="row">
+	        	<div class="col-sm-9">
+	        	
+				<div class="register-box">
   	
   	<div class="register-box-body">
     	<p class="login-box-msg">Enter tracking code</p>
@@ -92,24 +119,174 @@
               </table>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-     
-  </div>
+
+
+
+	        	<div class="col-sm-3">
+	        		<?php include 'includes/sidebar.php'; ?>
+	        	</div>
+	        </div>
+	      </section>
+	     
+	    </div>
+	  </div>
+  	<?php $pdo->close(); ?>
+	  <?php include 'includes/profile_modal.php'; ?>
   	<?php include 'includes/footer.php'; ?>
-   
-    <?php include 'includes/profile_modal.php'; ?>
 </div>
-<!-- ./wrapper -->
-</div>
-</body>
-</html>
-
-
 
 <?php include 'includes/scripts.php'; ?>
-<!-- Date Picker -->
+<script>
+var total = 0;
+$(function(){
+	$(document).on('click', '.cart_delete', function(e){
+		e.preventDefault();
+		var id = $(this).data('id');
+		$.ajax({
+			type: 'POST',
+			url: 'cart_delete.php',
+			data: {id:id},
+			dataType: 'json',
+			success: function(response){
+				if(!response.error){
+					getDetails();
+					getCart();
+					getTotal();
+				}
+			}
+		});
+	});
+	
+	$(document).on('click', '.minus', function(e){
+		e.preventDefault();
+		var id = $(this).data('id');
+		var qty = $('#qty_'+id).val();
+		if(qty>1){
+			qty--;
+		}
+		$('#qty_'+id).val(qty);
+		$.ajax({
+			type: 'POST',
+			url: 'cart_update.php',
+			data: {
+				id: id,
+				qty: qty,
+			},
+			dataType: 'json',
+			success: function(response){
+				if(!response.error){
+					getDetails();
+					getCart();
+					getTotal();
+				}
+			}
+		});
+	});
+
+
+
+
+
+
+	$(document).on('click', '.add', function(e){
+		e.preventDefault();
+		var id = $(this).data('id');
+		var qty = $('#qty_'+id).val();
+		qty++;
+		$('#qty_'+id).val(qty);
+		$.ajax({
+			type: 'POST',
+			url: 'cart_update.php',
+			data: {
+				id: id,
+				qty: qty,
+			},
+			dataType: 'json',
+			success: function(response){
+				if(!response.error){
+					getDetails();
+					getCart();
+					getTotal();
+				}
+			}
+		});
+	});
+
+	getDetails();
+	getTotal();
+
+});
+
+function getDetails(){
+	$.ajax({
+		type: 'POST',
+		url: 'cart_details.php',
+		dataType: 'json',
+		success: function(response){
+			$('#tbody').html(response);
+			getCart();
+		}
+	});
+}
+
+function getTotal(){
+	$.ajax({
+		type: 'POST',
+		url: 'cart_total.php',
+		dataType: 'json',
+		success:function(response){
+			total = response;
+		}
+	});
+}
+</script>
+<!-- Paypal Express -->
+<script>
+paypal.Button.render({
+    env: 'sandbox', // change for production if app is live,
+
+	client: {
+        sandbox:    'ASb1ZbVxG5ZFzCWLdYLi_d1-k5rmSjvBZhxP2etCxBKXaJHxPba13JJD_D3dTNriRbAv3Kp_72cgDvaZ',
+        //production: 'AaBHKJFEej4V6yaArjzSx9cuf-UYesQYKqynQVCdBlKuZKawDDzFyuQdidPOBSGEhWaNQnnvfzuFB9SM'
+    },
+
+    commit: true, // Show a 'Pay Now' button
+
+    style: {
+    	color: 'gold',
+    	size: 'small'
+    },
+
+    payment: function(data, actions) {
+        return actions.payment.create({
+            payment: {
+                transactions: [
+                    {
+                    	//total purchase
+                        amount: { 
+                        	total: total, 
+                        	currency: 'TSH' 
+                        }
+                    }
+                ]
+            }
+        });
+    },
+
+    onAuthorize: function(data, actions) {
+        return actions.payment.execute().then(function(payment) {
+			window.location = 'sales.php?pay='+payment.id;
+        });
+    },
+
+}, '#paypal-button');
+
+
+
+
+</script>
+
+
 <script>
 $(function(){
   //Date picker
@@ -200,4 +377,13 @@ $(function(){
   });
 });
 </script>
+
+
+</body>
+</html>
+
+
+
+
+
 
