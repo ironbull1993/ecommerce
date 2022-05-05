@@ -22,24 +22,16 @@
 	</div>
 </div>
 
-<!--div class="row">
+<div class="row">
 	<div class="box box-solid">
 	  	<div class="box-header with-border">
-	    	<h3 class="box-title"><b>Become a Subscriber</b></h3>
+	    	<h3 class="box-title" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fast Delivery</b></h3>
 	  	</div>
-	  	<div class="box-body">
-	    	<p>Get free updates on the latest products and discounts, straight to your inbox.</p>
-	    	<form method="POST" action="">
-		    	<div class="input-group">
-	                <input type="text" class="form-control">
-	                <span class="input-group-btn">
-	                    <button type="button" class="btn btn-info btn-flat"><i class="fa fa-envelope"></i> </button>
-	                </span>
-	            </div>
-		    </form>
+	  	<div class="box-body"><div class="mpesa"><img src="images/del.png" width="60px" height="35px" alt=""><p><b>Save money and time</b></p></div><div class="mpesa"><img src="images/knocking.png" width="60px" height="35px" alt=""><p><b>Door step service</b></p></div>
+	    	
 	  	</div>
 	</div>
-</div-->
+</div>
 
 <div class="row">
 	<div class='box box-solid'>
@@ -55,3 +47,9 @@
 	  	</div>
 	</div>
 </div>
+
+
+<style>
+
+
+</style>  
