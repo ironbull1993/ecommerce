@@ -6,13 +6,18 @@
 	$output = array('error'=>false);
 if(isset($_POST['id'])){
 	$id = $_POST['id'];
-	$quantity = $_POST['quantity'];
+	$quantity = $_POST['qty'];
 	$now = date('Y-m-d');
 	if(!isset($_SESSION['user'])){
 	$stmt = $conn->prepare("INSERT INTO users (type, status, created_on) VALUES (0, 1, :now)");
 					$stmt->execute(['now'=>$now]);
 					$userid = $conn->lastInsertId();
-					$_SESSION['user']=$userid;}
+					$_SESSION['user']=$userid;
+					//$_SESSION['start'] = time(); // Taking now logged in time.
+					// Ending a session in 30 minutes from the starting time.
+					//$_SESSION['expire'] = $_SESSION['start'] + (30*60);
+				
+				}
 	if(isset($_SESSION['user'])){
 
 
@@ -27,8 +32,9 @@ if(isset($_POST['id'])){
 				$stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (:user_id, :product_id, :quantity)");
 				$stmt->execute(['user_id'=>$_SESSION['user'], 'product_id'=>$id, 'quantity'=>$quantity]);
 			//	$stmt->execute(['user_id'=>$userid, 'product_id'=>$id, 'quantity'=>$quantity]);
-				$output['message'] = 'Item added to cart';
-				
+			
+			$output['message'] = 'Item added to cart';
+
 			//	$date = date('Y-m-d');
 			//	$stmt = $conn->prepare("INSERT INTO sales (user_id, sales_date) VALUES (:user_id, :sales_date)");
 			//	$stmt->execute(['user_id'=>$_SESSION['user'], 'sales_date'=>$date]);
@@ -59,7 +65,7 @@ if(isset($_POST['id'])){
 		$exist = array();
 
 		foreach($_SESSION['cart'] as $row){
-			array_push($exist, $row['id']);
+			array_push($exist, $row['productid']);
 		}
 
 		if(in_array($id, $exist)){
@@ -67,7 +73,7 @@ if(isset($_POST['id'])){
 			$output['message'] = 'Product already in cart';
 		}
 		else{
-			$data['id'] = $id;
+			$data['productid'] = $id;
 			$data['quantity'] = $quantity;
 
 			if(array_push($_SESSION['cart'], $data)){
@@ -78,9 +84,9 @@ if(isset($_POST['id'])){
 				$output['message'] = 'Cannot add item to cart';
 			}
 		}
-	}
-	}
 
+	}
+	}
 	
 	if(isset($_POST['id1'])){
 		$id = $_POST['id1'];

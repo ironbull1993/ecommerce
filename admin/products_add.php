@@ -7,7 +7,7 @@
 		$slug = slugify($name);
 		$category = $_POST['category'];
 		$price = $_POST['price'];
-		$stock = $_POST['stock'];
+		$stock = $_POST['stok'];
 		$description = $_POST['description'];
 		$filename = $_FILES['photo']['name'];
 

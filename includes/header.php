@@ -3,7 +3,7 @@
 <head>
   	<meta charset="utf-8">
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  	<title>ONLINE SHOPPING</title>
+  	<title>VESSEL TANZANIA</title>
   	<!-- Tell the browser to be responsive to screen width -->
   	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   	<!-- Bootstrap 3.3.7 -->
@@ -91,7 +91,48 @@
       width: 100px;
       height: 100px;
     }
+    #cart{
+    position: -webkit-sticky;
+    position: sticky;
+    top: 10%;
+    background-color: transparent;
+   
+   margin-right: 16px;
+    
+float: inline-end;
+z-index: 10;
+  }
+#cart2{background-color: white;
+    border-radius: 90px;
+    width: 1px;
+    height:1px;
+    padding:0px
+   
+}
 
+  
     </style>
 
 </head>
+<body>
+<div class="container navbar-custom-menu" id="cart">
+        <ul class="nav navbar-nav" >
+          <li class="dropdown messages-menu" >
+            <!-- Menu toggle button -->
+            <a href="#" id="cart2" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-shopping-cart"></i>
+              <span class="label label-success cart_count"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">You have <span class="cart_count"></span> item(s) in cart</li>
+              <li>
+                <ul class="menu" id="cart_menu">
+                </ul>
+              </li>
+              <li class="footer"><a href="cart_view.php">Go to Cart</a></li>
+            </ul>
+          </li>
+          
+        </ul>
+      </div>
+</body>

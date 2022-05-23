@@ -98,8 +98,7 @@
 							$salesid = $conn->lastInsertId();
 							$qly=$conn->query('UPDATE sales SET delivery_status ="Pending" WHERE  id ='.$salesid);
 							
-
-
+							
 							$stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM cart WHERE user_id=:user_id AND product_id=:product_id");
 							$stmt->execute(['user_id'=>$iid, 'product_id'=>$id]);
 							//$stmt->execute(['user_id'=>$userid, 'product_id'=>$id]);
@@ -117,6 +116,26 @@
 								$proid=$row['product_id'];
 								$qntty=$row['quantity'];
 								
+								
+								$stmt1= $conn->prepare("SELECT * FROM products WHERE id=:id1");
+								$stmt1->execute(['id1'=>$proid]);
+								$row4 = $stmt1->fetch();
+								
+								$tot=$qntty*$row4['price'];
+								
+								
+								         try{
+									$stmt = $conn->prepare("INSERT INTO sales_perday (product_id, qnty_sold, amount, date) VALUES (:product_id, :quantity, :amt, :dt)");
+									$stmt->execute(['product_id'=>$row['product_id'], 'quantity'=>$qntty, 'amt'=>$tot, 'dt'=>$date]);
+								}catch(PDOException $e){
+									$_SESSION['error'] = $e->getMessage();
+								}
+
+								
+								
+								
+								
+								
 								$stmt1= $conn->prepare("SELECT stock FROM products WHERE id=:id1");
 								$stmt1->execute(['id1'=>$proid]);
 								foreach($stmt1 as $rw){
@@ -133,9 +152,9 @@
 					
 								session_start();
 	                            session_destroy();
-								echo '<script type="text/javascript">  window.onload = function(){
-									alert("Transaction successful");
-								  }</script>';
+								//echo '<script type="text/javascript">  window.onload = function(){
+								//	alert("Transaction successful");
+							//	  }</script>';
 	                            header('location: index.php');
 							//	$_SESSION['success'] = 'Transaction successful. Thank you.';
 					
@@ -159,10 +178,38 @@
 
 
 
-					echo '<script type="text/javascript">  window.onload = function(){
-						alert("Transaction successful");
-					  }</script>';
+				//	echo '<script type="text/javascript">  window.onload = function(){
+				//		alert("Transaction successful");
+				//	  }</script>';
+				
+		/*		
+				// SEND SMS
+$curl = curl_init();
+
+curl_setopt_array($curl, [
+    CURLOPT_URL => 'https://sms.arkesel.com/api/v2/sms/send',
+    CURLOPT_HTTPHEADER => ['api-key: c1R0bldlVFZ6emdaREdNWmtHZEU'],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => http_build_query([
+        'sender' => 'VESSEL TZ',
+        'message' => 'YOU HAVE NEW ORDERS',
+        'recipients' => ['255743997716', '255769559466']
+    ]),
+]);
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+//echo $response;
+				*/
 					  header('location: index.php');
+
 						$pdo->close();
 				//	}
 

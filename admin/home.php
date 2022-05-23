@@ -114,7 +114,7 @@ else{
           <div class="small-box bg-yellow">
             <div class="inner">
               <?php
-                $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM users");
+                $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM users WHERE type=1");
                 $stmt->execute();
                 $urow =  $stmt->fetch();
 

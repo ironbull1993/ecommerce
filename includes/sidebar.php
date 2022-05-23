@@ -25,7 +25,7 @@
 <div class="row">
 	<div class="box box-solid">
 	  	<div class="box-header with-border">
-	    	<h3 class="box-title" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fast Delivery</b></h3>
+	    	<h3 class="box-title" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fast & Free Delivery</b></h3>
 	  	</div>
 	  	<div class="box-body"><div class="mpesa"><img src="images/del.png" width="60px" height="35px" alt=""><p><b>Save money and time</b></p></div><div class="mpesa"><img src="images/knocking.png" width="60px" height="35px" alt=""><p><b>Door step service</b></p></div>
 	    	

@@ -5,7 +5,7 @@
 
 	$conn = $pdo->open();
 
-	$stmt = $conn->prepare("SELECT * FROM products");
+	$stmt = $conn->prepare("SELECT * FROM products WHERE stock>0");
 	$stmt->execute();
 	foreach($stmt as $row){
 		$output .= "

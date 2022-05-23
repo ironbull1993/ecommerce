@@ -79,7 +79,7 @@ include 'includes/session.php';
                         $stat1='Pending';
                         $stat2='On progress...';
 
-                        if( $stat== $stat1){
+                        if( $stat== $stat1 || $stat== $stat2){
                         foreach($stmt as $details){
                           $subtotal = $details['price']*$details['quantity'];
                           $total += $subtotal;

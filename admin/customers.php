@@ -53,10 +53,9 @@
             <div class="box-body">
               <table id="example1" class="table table-bordered">
                 <thead>
-                  <th>Photo</th>
-                  <th>Email</th>
+                 
                   <th>Name</th>
-                  <th>Status</th>
+                 
                   <th>Date Added</th>
                   <th>Tools</th>
                 </thead>
@@ -66,23 +65,17 @@
 
                     try{
                       $stmt = $conn->prepare("SELECT * FROM users WHERE type=:type");
-                      $stmt->execute(['type'=>0]);
+                      $stmt->execute(['type'=>5]);
                       foreach($stmt as $row){
                         $image = (!empty($row['photo'])) ? '../images/'.$row['photo'] : '../images/profile.jpg';
                         $status = ($row['status']) ? '<span class="label label-success">active</span>' : '<span class="label label-danger">not verified</span>';
                         $active = (!$row['status']) ? '<span class="pull-right"><a href="#activate" class="status" data-toggle="modal" data-id="'.$row['id'].'"><i class="fa fa-check-square-o"></i></a></span>' : '';
                         echo "
                           <tr>
-                            <td>
-                              <img src='".$image."' height='30px' width='30px'>
-                              <span class='pull-right'><a href='#edit_photo' class='photo' data-toggle='modal' data-id='".$row['id']."'><i class='fa fa-edit'></i></a></span>
-                            </td>
-                            <td>".$row['email']."</td>
+                            
+                           
                             <td>".$row['firstname'].' '.$row['lastname']."</td>
-                            <td>
-                              ".$status."
-                              ".$active."
-                            </td>
+                            
                             <td>".date('M d, Y', strtotime($row['created_on']))."</td>
                             <td>
                               <a href='cart.php?user=".$row['id']."' class='btn btn-info btn-sm btn-flat'><i class='fa fa-search'></i> Cart</a>

@@ -1,11 +1,14 @@
 <style>
-  
+  #navbar-collapse{
+      margin-top:20px;
+  }
+
   </style>
 <header class="main-header">
 
   <nav class="navbar navbar-static-top">
     <div class="container">
-      <div class="navbar-header">
+      <div class="navbar-header"> <a href="index.php"> <img style="width:25%; margin-left:10%;" src="images/1234.png"></a>
         <!--a href="https://www.youtube.com/channel/UCsFgC9ggwrmYR2XqEHXpbNg" class="navbar-brand"><b>Ser</b>Bermz</a-->
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
           <i class="fa fa-bars"></i>
@@ -14,13 +17,11 @@
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
-        <ul class="nav navbar-nav"><a class="navbar-brand" href="#">
-        
-      </a>
-          <!--li><a href="index.php">HOME</a></li-->
+        <ul class="nav navbar-nav">
+          <li><a href="index.php">HOME</a></li>
           <li><a href="">ABOUT US</a></li>
           <li><a href="">CONTACT US</a></li>
-          <li><a href="track.php">Track order</a></li>
+          <li><a href="track.php">TRACK ORDER</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">CATEGORY <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
@@ -46,12 +47,10 @@
             </ul>
           </li-->
         </ul>
-        <form method="POST" class="navbar-form navbar-left" action="search.php">
+        <form method="POST" class="navbar-form navbar-left"  action="search.php">
           <div class="input-group">
-              <input type="text" class="form-control" id="navbar-search-input" name="keyword" placeholder="Search for Product" required>
-              <span class="input-group-btn" id="searchBtn" style="display:none;">
-                  <button type="submit" class="btn btn-default btn-flat"><i class="fa fa-search"></i> </button>
-              </span>
+              <input type="text" class="form-control" style="border-radius:25px; width:80%;" id="navbar-search-input" name="keyword" placeholder="Search for Product" required>
+              
           </div>
         </form>
       </div>

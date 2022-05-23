@@ -55,14 +55,8 @@
               <table id="example1" class="table table-bordered">
                 <thead>
                   <th class="hidden"></th>
-                  <th>Date</th>
-                  <th>Buyer Name</th>
-                  <th>Transaction#</th>
-                  <th>Amount</th>
-                  <th>Address</th>
-                  <th>Phone</th>
-                  <th>Delivery status</th>
-                  <th>Full Details</th>
+                  <th>Date<br>Transaction &<br>Amount</th>
+                  <th>Contact details<br>Delivery status</th>
                 </thead>
                 <tbody>
                   <?php
@@ -91,14 +85,13 @@
                         echo "
                           <tr>
                             <td class='hidden'></td>
-                            <td>".date('M d, Y', strtotime($row['sales_date']))."</td>
-                            <td>".$row['firstname'].' '.$row['lastname']."</td>
-                            <td>".$row['pay_id']."</td>
-                            <td>Tsh &nbsp; ".number_format($total, 2)."/=</td>
-                            <td>".$row['address']."</td>
-                            <td>".$row['contact_info']."</td>
-                            <td>".$row['delivery_status']."</td>
-                            <td><button type='button' class='btn btn-info btn-sm btn-flat transact' data-id='".$row['salesid']."'><i class='fa fa-search'></i> View</button></td>
+                            <td>".date('M d, Y', strtotime($row['sales_date']))."<br><small>".$row['pay_id']."
+                            <br>Tsh &nbsp; ".number_format($total, 2)."/=</small></td>
+                            <td><small>".$row['firstname'].' '.$row['lastname']."<br>".$row['address']."<br>".$row['contact_info']."</small>
+                            
+                     
+                            <br>".$row['delivery_status']."<br>
+                            <button type='button' class='btn btn-info btn-sm btn-flat transact' data-id='".$row['salesid']."'><i class='fa fa-search'></i> View</button></td>
                             
                            
                             

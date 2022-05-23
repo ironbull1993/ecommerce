@@ -1,11 +1,10 @@
 <?php
 	include 'includes/session.php';
-	//include 'sales.php';
+	
 	$conn = $pdo->open();
-
 	$output = '';
 
-	if(isset($_SESSION['user'])){//$qly=$conn->query('UPDATE users SET delivery_status ="eddet" WHERE  id ='.$user['id']);
+	if(isset($_SESSION['user'])){
 		
 		if(isset($_SESSION['cart'])){
 			foreach($_SESSION['cart'] as $row){
@@ -25,38 +24,79 @@
 		}
 
 		try{
+			
+
+			
 			$total = 0;
+			$sub1=0;
+			$stmt2 = $conn->prepare("SELECT *, cart.id AS cartid FROM cart LEFT JOIN products ON products.id=cart.product_id WHERE user_id=:user AND products.stock=0");
+			$stmt2->execute(['user'=>$user['id']]);
+			foreach($stmt2 as $rws){
+				$sub2=$rws['price']*$rws['quantity'];
+				$sub1+=$sub2;
+			}
 			$stmt = $conn->prepare("SELECT *, cart.id AS cartid FROM cart LEFT JOIN products ON products.id=cart.product_id WHERE user_id=:user");
 			$stmt->execute(['user'=>$user['id']]);
 			foreach($stmt as $row){
+				
+			
+					if($row['stock']<=0){ 
+	
+				
+				
 				$image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
 				$subtotal = $row['price']*$row['quantity'];
 				$total += $subtotal;
 				$output .= "
 					<tr>
-						<td><button type='button' data-id='".$row['cartid']."' class='btn btn-danger btn-flat cart_delete'><i class='fa fa-remove'></i></button></td>
-						<td><img src='".$image."' width='30px' height='30px'></td>
-						<td>".$row['name']."</td>
-						<td>Tsh &nbsp; ".number_format($row['price'], 2)."/=</td>
-						<td class='input-group'>
-							<span class='input-group-btn'>
-            					<button type='button' id='minus' class='btn btn-default btn-flat minus' data-id='".$row['cartid']."'><i class='fa fa-minus'></i></button>
-            				</span>
-            				<input type='text' class='form-control' value='".$row['quantity']."' id='qty_".$row['cartid']."'>
-				            <span class='input-group-btn'>
-				                <button type='button' id='add' class='btn btn-default btn-flat add' data-id='".$row['cartid']."'><i class='fa fa-plus'></i>
-				                </button>
-				            </span>
-						</td>
-						<td>Tsh &nbsp; ".number_format($subtotal, 2)."/=</td>
+
+						<td><img src='".$image."' width='30px' height='30px'>".$row['name']."
+						<label  class='blink_text'>Sold Out</label>
+						<button type='button' data-id='".$row['cartid']."' style='border-radius: 30px;border-style:hidden;background-color:white; float:right;' class='btn btn-danger btn-flat cart_delete'><i style='color:red;' class='fa fa-trash'></i></button></td>
+						
+						<td>Tsh &nbsp; ".number_format($row['price'], 2)."/=<!--span class='input-group-btn'>
+						<button type='button' id='minus' style='border-radius: 30px; border-style:hidden;background-color:white;float:left;' class='btn btn-default btn-flat minus' data-id='".$row['cartid']."'><i class='fa fa-minus'></i></button>
+					
+					
+					
+						<button type='button' id='add' style='border-radius: 30px; ' class='btn btn-default btn-flat add' data-id='".$row['cartid']."'><i class='fa fa-plus'></i>
+						</button><input type='text' style='width: 35px; border-radius: 30px; text-align:center;'  class='form-control' value='".$row['quantity']."' id='qty_".$row['cartid']."'>
+					</span-->
+				</td>
+						
+						<!--td>Tsh &nbsp; ".number_format($subtotal, 2)."/=</td-->
 					</tr>
 					
 				";
+			}else{
+				$image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
+				$subtotal = $row['price']*$row['quantity'];
+				$total += $subtotal;
+				$output .= "
+					<tr>
+
+						<td><img src='".$image."' width='30px' height='30px'>".$row['name']."<button type='button' data-id='".$row['cartid']."' style='border-radius: 30px;border-style:hidden;background-color:white; float:right;' class='btn btn-danger btn-flat cart_delete'><i style='color:red;' class='fa fa-trash'></i></button></td>
+						
+						<td>Tsh &nbsp; ".number_format($subtotal, 2)."/=<span class='input-group-btn'>
+						<button type='button' id='minus'style='border-radius: 30px; border-style:hidden;background-color:white;float:left;' class='btn btn-default btn-flat minus' data-id='".$row['cartid']."'><i class='fa fa-minus'></i></button>
+					
+					
+					
+						<button type='button' id='add' style='border-radius: 30px; border-style:hidden;background-color:white;float:left;' class='btn btn-default btn-flat add' data-id='".$row['cartid']."'><i class='fa fa-plus'></i>
+						</button><input type='text'style='border-radius: 30px; border-style:hidden;background-color:white;float:right;'  class='form-control' value='".$row['quantity']."' id='qty_".$row['cartid']."'>
+					</span></td>
+						
+						<!--td>Tsh &nbsp; ".number_format($subtotal, 2)."/=</td-->
+					</tr>
+					
+				";
+		}
+				
 			}
 			$output .= "
 				<tr>
-					<td colspan='5' align='right'><b>Total</b></td>
-					<td><b>Tsh &nbsp; ".number_format($total, 2)."/=</b></td>
+					<td colspan='5' align='center'><b>Total</b>&nbsp;<b>Tsh &nbsp; ".number_format($total-$sub1, 2)."/=</b></td>
+					
 				<tr>
 			";
 

@@ -74,10 +74,11 @@ animation:1s blinker linear infinite;
        break;
       ?><?php endwhile; ?>
       <span>Pending Orders</span></a></li>
-      <li><a href="sales.php"><i class="fa fa-money"></i> <span>Sales</span></a></li>
-      <li><a href="sales2.php"><i class="fa fa-money"></i> <span>Orders</span></a></li>
+      <li><a href="sales.php"><i class="fa fa-money"></i> <span>Total Sales</span></a></li>
+      <li><a href="todaysales.php"><i class="fa fa-money"></i> <span>Today's Sales</span></a></li>
+      <li><a href="sales2.php"><i class="fa fa-money"></i> <span>All Orders</span></a></li>
       <li class="header">MANAGE</li>
-      <li><a href="users.php"><i class="fa fa-users"></i> <span>Customers</span></a></li>
+      <li><a href="customers.php"><i class="fa fa-users"></i> <span>Customers</span></a></li>
       <li><a href="users1.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
       <li><a href="drivers.php"><i class="fa fa-motorcycle"></i> <span>Drivers</span></a></li>
       <li><a href="payment.php"><i class="fa fa-motorcycle"></i> <span>Payments</span></a></li>

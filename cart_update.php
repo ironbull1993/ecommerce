@@ -10,9 +10,19 @@
 
 	if(isset($_SESSION['user'])){
 		try{
+			$stmt = $conn->prepare("SELECT * FROM cart WHERE id=:ids");
+			$stmt->execute(['ids'=>$id]);
+            $row=$stmt->fetch();
+            $s=$row['product_id'];
+            $stmt = $conn->prepare("SELECT * FROM products WHERE id=:idpr");
+            $stmt->execute(['idpr'=>$s]);
+            $row1=$stmt->fetch();
+            $s1=$row1['stock']+1;
+			if($s1>$qty){
 			$stmt = $conn->prepare("UPDATE cart SET quantity=:quantity WHERE id=:id");
 			$stmt->execute(['quantity'=>$qty, 'id'=>$id]);
-			$output['message'] = 'Updated';
+			}else{
+			$output['message'] = 'no more items in stock';}
 		}
 		catch(PDOException $e){
 			$output['message'] = $e->getMessage();

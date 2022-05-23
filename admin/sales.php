@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Sales History
+      Total sales
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Sales</li>
+        <li class="active">Total sales</li>
       </ol>
     </section>
 
@@ -36,52 +36,56 @@
                   <button type="submit" class="btn btn-success btn-sm btn-flat" name="print"><span class="glyphicon glyphicon-print"></span> Print</button>
                 </form>
               </div>
+              <div>
+                <?php
+                 $date = date('Y-m-d');
+  $stmt = $conn->prepare("SELECT * FROM sales_perday LEFT JOIN products ON products.id=sales_perday.product_id");
+  
+   $stmt->execute();
+ $sum = 0;
+ foreach($stmt as $details){
+   $sum+=$details['amount'];
+ }
+                ?>
+                <h2><b>Total:  <?php echo $sum; ?>/=</b></h2>
+              </div>
             </div>
             <div class="box-body">
               <table id="example1" class="table table-bordered">
                 <thead>
                   <th class="hidden"></th>
-                  <th>Date</th>
-                  <th>Buyer Name</th>
-                  <th>Transaction#</th>
+                  
+                  <th>Product</th>
+                  <th>Quantity</th>
                   <th>Amount</th>
-                  <th>Address</th>
-                  <!--th>Phone</th>
-                  <th>Delivery status</th-->
-                  <th>Full Details</th>
+                  
                 </thead>
                 <tbody>
                   <?php
+                   $date = date('Y-m-d');
                     $conn = $pdo->open();
-                   // $stat="Pending";
+                   
+                   
                     try{
-                      //$users = $conn->query("SELECT * FROM users order by name asc");
-                      $stmt = $conn->prepare("SELECT *, sales.id AS salesid FROM sales LEFT JOIN users ON users.id=sales.user_id ORDER BY sales_date DESC");
-                      $stmt->execute();
-
-                      foreach($stmt as $row){
-                        $stmt = $conn->prepare("SELECT * FROM details LEFT JOIN products ON products.id=details.product_id WHERE details.sales_id=:id");
-                        $stmt->execute(['id'=>$row['salesid']]);
-                        $total = 0;
+                     
+                        $stmt = $conn->prepare("SELECT name, SUM(qnty_sold), SUM(amount) FROM sales_perday LEFT JOIN products ON products.id=sales_perday.product_id GROUP BY name");
+                      
+                       $stmt->execute();
+                     
                         foreach($stmt as $details){
-                          $subtotal = $details['price']*$details['quantity'];
-                          $total += $subtotal;
-                          
-                        }
+                      
+                        
                         echo "
                           <tr>
                             <td class='hidden'></td>
-                            <td>".date('M d, Y', strtotime($row['sales_date']))."</td>
-                            <td>".$row['firstname'].' '.$row['lastname']."</td>
-                            <td>".$row['pay_id']."</td>
-                            <td>Tsh &nbsp; ".number_format($total, 2)."/=</td>
-                            <td>".$row['address']."</td>
                             
-                            <td><button type='button' class='btn btn-info btn-sm btn-flat transact' data-id='".$row['salesid']."'><i class='fa fa-search'></i> View</button></td>
-                            
+                            <td>".$details['name']."</td>
+                            <td>".$details['SUM(qnty_sold)']."</td>
+                            <td>Tsh &nbsp; ".number_format($details['SUM(amount)'], 2)."/=</td>
+                           
                             </tr>
                         ";
-                      }
+                   }
                     }
                     catch(PDOException $e){
                       echo $e->getMessage();

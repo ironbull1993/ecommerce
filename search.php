@@ -1,4 +1,6 @@
-<?php include 'includes/session.php'; ?>
+<?php include 'includes/session.php';
+ob_start();
+ ?>
 <?php include 'includes/header.php'; ?>
 <style>.main {
   positive:relative;
@@ -53,6 +55,10 @@ button:hover {
 	      <section class="content">
 	        <div class="row">
 	        	<div class="col-sm-9">
+                <div class="callout" id="callout" style="display:none">
+	        			<button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+	        			<span class="message"></span>
+	        		</div>
 	            <?php
 	       			
 	       			$conn = $pdo->open();
@@ -70,43 +76,44 @@ button:hover {
 						    $stmt = $conn->prepare("SELECT * FROM products WHERE name LIKE :keyword");
 						    $stmt->execute(['keyword' => '%'.$_POST['keyword'].'%']);
 					 
-						    while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+						   while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
 								$image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
 								?>
 							
-								<form method="post" action="<?php echo$_SERVER['PHP_SELF']; ?>?id=<?php echo $row["id"]; ?>" >
-								<div class='col-sm-4'>
+								<form>
+								<div class='col-sm-3' id="taken" >
 									   <div class='box box-solid'>
-										   <div class='box-body prod-body'>
+										   <div class='box-body prod-body' >
 					  
-										<img src="<?php echo $image; ?>" width='100%' height='230px' class='thumbnail' />
+										<img src="<?php echo $image; ?>" width='100%' height='150px' class='thumbnail' />
+									 <?php
+									  if($row['stock']<=0){
+										echo"<h5>".$row['name']."</h5>";
+									  } 
+									  else{
+								  
+								echo"		<h5><a href='product.php?product=".$row['slug']."'>".$row['name']."</a></h5>";} ?>
+										</div>
+										<div class='box-footer' style="margin-top:0%;">
+										
+										
 										<?php
-                                          if($row['stock']<=0){
-											echo"<h5>".$row['name']."</h5>";
-										  } 
-										  else{
-					                  
-									echo"		<h5><a href='product.php?product=".$row['slug']."'>".$row['name']."</a></h5>";} ?>
-					                        </div>
-											<div class='box-footer' >
-											
-											
-											<?php
-                                            if($row['stock']<=0){
-												?><div class='box-footer' style="background-color: lightgreen;border-radius: 25px;text-align: center;height: 30px;padding-top: 6px; margin-top:23px; ">
-                                              <label>Out of Stock </label>
-											  </div>
-											  <?php
-											;}else{
-                                              ?><div style="text-align: center;" >
-											  <b >Tsh <?php echo $row["price"]; ?></b></div>
-											  <input type="hidden" name="quantity" id="quantity" class="form-control input-lg" value="1">
-														
-											  <input type="hidden" name="id" value="<?php echo $row["id"]; ?>" /><div class="main">
-											&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class=""> Add to Cart</button></div>
-											<?php
-											;}
-                                              ?>
+										if($row['stock']<=0){
+											?><div class='box-footer' style="background-color: lightgreen;border-radius: 25px;text-align: center;height: 29px;padding-top: 6px; margin-top:23px; ">
+										  <label>Out of Stock </label>
+										  </div>
+										  <?php
+										;}else{
+										  ?><div style="text-align: center;" >
+										  <b >Tsh <?php echo $row["price"]; ?></b></div>
+										  <input type="hidden" name="quantity" id="qty" class="form-control input-lg" value="1">
+													
+										  <div class="main">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" id="btn" class="" data-id="<?php echo $row['id'];?>" style="border-radius: 25px;"> Add to Cart</button></div>
+										<?php
+										;}
+										  ?>
+				
 										</div>
 									</div>
 									</div>
@@ -151,6 +158,7 @@ button:hover {
 	$output = array('error'=>false);
 if(isset($_POST['id'])){
 	$id = $_POST['id'];
+    $sch=$_REQUEST['sch'];
 	$quantity = $_POST['quantity'];
 	$now = date('Y-m-d');
 	if(!isset($_SESSION['user'])){
@@ -171,7 +179,7 @@ if(isset($_POST['id'])){
 			try{
 				$stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (:user_id, :product_id, :quantity)");
 				$stmt->execute(['user_id'=>$_SESSION['user'], 'product_id'=>$id, 'quantity'=>$quantity]);
-			//	$stmt->execute(['user_id'=>$userid, 'product_id'=>$id, 'quantity'=>$quantity]);
+			    Header("Location: search.php?val=".$sch);
 				$output['message'] = 'Item added to cart';
 				echo '<h1 class="page-header"><i>'.$output['message'] = 'Item added to cart'.'</i></h1>';
 			//	$date = date('Y-m-d');
@@ -242,6 +250,6 @@ if(isset($_POST['id'])){
 	
 
 	$pdo->close();
-	echo json_encode($output);
-
+	//echo json_encode($output);
+ob_end_flush();
 ?>

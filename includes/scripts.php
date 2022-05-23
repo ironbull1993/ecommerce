@@ -47,17 +47,17 @@ $(function(){
   	var product = $(this).serialize();
   	$.ajax({
   		type: 'POST',
-  		url: 'cart_add.php',
+  		url: 'cart_add2.php',
   		data: product,
   		dataType: 'json',
   		success: function(response){
   			$('#callout').show();
   			$('.message').html(response.message);
   			if(response.error){
-  				$('#callout').removeClass('callout-success').addClass('callout-danger');
+  				$('#callout').removeClass('callout-success').addClass('callout-danger');$('#callout').delay(2000).fadeOut();
   			}
   			else{
-				$('#callout').removeClass('callout-danger').addClass('callout-success');
+				$('#callout').removeClass('callout-danger').addClass('callout-success');$('#callout').delay(2000).fadeOut();
 				getCart();
   			}
   		}
@@ -65,7 +65,32 @@ $(function(){
   });
 
 	
-  
+  $(document).on('click', '#btn', function(e){
+		e.preventDefault();
+		var id = $(this).data('id');
+		var qty = $('#qty').val();
+		
+		$.ajax({
+			type: 'POST',
+			url: 'cart_add.php',
+			data: {
+				id: id,
+				qty: qty,
+			},
+			dataType: 'json',
+			success: function(response){
+				$('#callout').show();
+  			$('.message').html(response.message);
+				if(!response.error){
+					$('#callout').removeClass('callout-danger').addClass('callout-success');$('#callout').delay(2000).fadeOut();
+					getCart();
+					
+				}else{
+					$('#callout').removeClass('callout-success').addClass('callout-danger');$('#callout').delay(2000).fadeOut();
+				}
+			}
+		});
+	});
     
 
   $(document).on('click', '.close', function(){

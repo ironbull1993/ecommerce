@@ -1,5 +1,59 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
+<style>
+	.blink_text {
+
+
+
+animation:1s blinker linear infinite;
+
+-webkit-animation:1s blinker linear infinite;
+
+-moz-animation:1s blinker linear infinite;
+
+
+
+ color: red;
+
+}
+
+
+
+@-moz-keyframes blinker {  
+
+ 0% { opacity: 1.0; }
+
+ 50% { opacity: 0.0; }
+
+ 100% { opacity: 1.0; }
+
+ }
+
+
+
+@-webkit-keyframes blinker {  
+
+ 0% { opacity: 1.0; }
+
+ 50% { opacity: 0.0; }
+
+ 100% { opacity: 1.0; }
+
+ }
+
+
+
+@keyframes blinker {  
+
+ 0% { opacity: 1.0; }
+
+ 50% { opacity: 0.0; }
+
+ 100% { opacity: 1.0; }
+
+ }
+
+</style>
 <body class="hold-transition skin-blue layout-top-nav">
 <div class="wrapper">
 
@@ -14,18 +68,21 @@
 	      <section class="content">
 	        <div class="row">
 	        	<div class="col-sm-9">
+                <div class="callout" id="callout" style="display:none;">
+	        			<button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+	        			<span class="message"></span>
+	        		</div>
 	        		<h1 class="page-header">YOUR CART</h1>
 	        		<div class="box box-solid">
 	        			<div class="box-body">
 							
 		        		<table class="table table-bordered">
 		        			<thead>
-		        				<th></th>
-		        				<th>Photo</th>
-		        				<th>Name</th>
-		        				<th>Price</th>
-		        				<th width="20%">Quantity</th>
-		        				<th>Subtotal</th>
+		        				<th>Product</th>
+		        				
+		        				<th>Price &<br> Quantity</th>
+		        				
+		        				
 		        			</thead>
 		        			<tbody id="tbody">
 		        			</tbody>
@@ -36,22 +93,16 @@
 	        			</div>
 	        		</div>
 	        		<?php
-	        			if(isset($_SESSION['user'])){
+	        			
 	        				echo "
 	        					<!--div id='paypal-button'></div-->
-								
-								<button><a href='signup.php'>Checkout</a></button>
-								<button><a href='index.php'>Back to products</a></button>
+								<div>
+								<button id='check' style='border-radius:25px;'><a>Checkout</a></button>
+								<button style='border-radius:25px; float:right;'><a href='index.php'>Back to products</a></button></div>
 	        				";
-	        			}
+	        			
 						
-	        			else{
-	        				echo "
-	        					<!--h4>You need to <a href='login.php'>Login</a> to checkout.</h4-->
-								<button type='submit'><a href='signup.php'>Pay</a></button>
-								
-	        				";
-	        			}
+	        			
 	        		?>
 	        	</div>
 	        	<div class="col-sm-3">
@@ -115,7 +166,38 @@ $(function(){
 	});
 
 
-
+$(document).on('click', '#check', function(e){
+		e.preventDefault();
+			getTotal();
+			if(total==0){
+				$('#callout').show();
+  			$('.message').html('Your cart is empty please add items.');
+			$('#callout').removeClass('callout-danger').addClass('callout-danger');$('#callout').delay(2000).fadeOut();
+			}
+			else{
+			
+		   $.ajax({
+		type: 'POST',
+		url: 'check_products.php',
+		dataType: 'json',
+		success:function(response){
+			output = response;
+			if(output==0){
+			$('#callout').show();
+  			$('.message').html('some items have just been sold out.');
+			$('#callout').removeClass('callout-danger').addClass('callout-danger');
+			$('#callout').delay(2000).fadeOut();
+			getDetails();
+			getCart();
+			getTotal();
+			}else{
+		    window.location= 'signup.php'; 
+		    }
+		}
+	});
+}
+		});
+	
 
 
 
@@ -126,6 +208,25 @@ $(function(){
 		qty++;
 		$('#qty_'+id).val(qty);
 		$.ajax({
+		type: 'POST',
+		url: 'stock_check.php',
+		data: {
+				id: id,
+				qty: qty,
+			},
+		dataType: 'json',
+		success:function(response){
+		output = response;
+		if(output==qty){
+		$('#callout').show();
+  		$('.message').html('Sorry..This is the remaining quantity in stock.');
+		$('#callout').removeClass('callout-danger').addClass('callout-danger');
+		$('#callout').delay(2000).fadeOut();
+			       getDetails();
+				   //getCart();
+				   getTotal();
+		}else{
+		    $.ajax({
 			type: 'POST',
 			url: 'cart_update.php',
 			data: {
@@ -141,7 +242,10 @@ $(function(){
 				}
 			}
 		});
+		
+	}}
 	});
+});
 
 	getDetails();
 	getTotal();
